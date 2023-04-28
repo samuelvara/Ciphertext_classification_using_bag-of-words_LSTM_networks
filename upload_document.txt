@@ -1,0 +1,46 @@
+### Method Name ###
+bag-of-words + GRU-LSTM-Conv1D
+
+### Representation of sentence ###
+I cleaned the sentence first, removing question marks, exclamations etc. Since encrypted words couldn't have the same prefix (which would make it suitable for stemming) and also lemmatization, I used bag of words i.e, assigning random non-overlapping numbers to every word.
+Unknown words or OOV would be assigned 99999. Trained word2vec on the entire training set from scratch, but this couldn't give a significant improvement over the previous approach.
+
+### Classifier ###
+I used 64 length embedding vector trained using the Embedding layer in Keras which turns positive integers (indexes) into dense vectors of fixed size.
+Then I used Gated Recurrent Units. They are similar to LSTM and are capable of learning long-term dependencies using mechanisms called 'gates'. These gates are different tensor operations that can learn what information to add or remove to the hidden state. Because of this ability, short-term memory is less of an issue for them. To extract features in a fixed window size, I used Conv1D layers. Then I used sigmoid to map out the probability of choosing a label. The objective is accuracy with the optimizer being Adam.
+The entire model was trained from scratch in parts so as to not overload the RAM. I used Dropout for Regularization and to prevent overfitting. The loss function is binary cross entropy.
+
+### Training & Development ###
+I evaluated the data first on 0.2 validation split and then I used the entire training set to model the data. Finally, I used training data to create word-integer Representations and used a validtion set for hyperparameter tuning. For the hyperparameter tunning, I used grid search to fine-tune the hyperparameters. I used Adam Optimizer and Binary Cross Entropy as loss functions. The sigmoid function at the last Dense layer gave the probability map for each prediction.
+Hyperparameters include 
+Maximum sentence length - 300
+EMBEDDING_SIZE - 64
+Max Unique words - 10000
+Kernel size - 3
+Nodes per each layer - (64, 128, 256)
+batch size - 128
+Optimizer - Adam
+Loss Function - binary cross Entropy
+Activation Function - relu
+learning rate - 0.1
+
+I used Early Stopping as well as Callbacks to stop the model when validation loss (loss on the dev set) increased and Save the best model parameters for use in predicting unseen data respectively.
+
+
+### Other methods ###
+Trained from scratch BERT-BASED vectors + BERT
+Trained from scratch BERT-BASED vectors + RoBERTa
+Trained from scratch BERT-BASED vectors + DistilBERT
+Trained from scratch BERT-BASED vectors + XLNet
+CNN
+Naive Bayes
+SVM
+Bert-based Vectors  + SVM
+LSTM only
+LSTM - CNN
+LSTM - CNN - FCNN
+
+### Packages ###
+TensorFlow
+Keras
+Numpy
